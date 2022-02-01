@@ -1,5 +1,5 @@
 {
-  "app": "dotnet run -p src/ChatAppNet6AwsCdk/ChatAppNet6AwsCdk.csproj",
+  "app": "dotnet run -p src/cdk/cdk.csproj",
   "watch": {
     "include": [
       "**"
