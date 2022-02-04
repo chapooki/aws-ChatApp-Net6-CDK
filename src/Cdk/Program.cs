@@ -15,6 +15,11 @@ namespace Cdk
                 Region = "ap-southeast-2",
             };
 
+            var cognitoStack = new CognitoStack(app, "ChatAppCognitoStack", new StackProps
+            {
+                Env = env
+            });
+
             var dynamoDBStack = new DynamoDBStack(app, "ChatAppDynamoDBStack", new StackProps
             {
                 Env = env
@@ -23,7 +28,8 @@ namespace Cdk
             var lambdasStack = new LambdasStack(app, "ChatAppLambdasStack", new LambdasStackProps
             {
                 Env = env,
-                ChatTable = dynamoDBStack.ChatTable
+                ChatTable = dynamoDBStack.ChatTable,
+                UserPool = cognitoStack.UserPool
             });
 
             app.Synth();

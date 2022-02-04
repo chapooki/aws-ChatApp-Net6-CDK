@@ -1,23 +1,18 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using App.Helpers;
-using App.models;
-using App.services.interfaces;
+using App.Models;
+using App.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.services
+namespace App.Services
 {
     public class UserService : IUserService
     {
-        public string Test()
-        {
-            return "DI test worked";
-        }
-
         public async Task<ChatUser> GetById(Guid userId)
         {
             ChatUser user = new ChatUser { Id = userId };

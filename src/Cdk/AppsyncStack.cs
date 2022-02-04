@@ -1,5 +1,6 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.AppSync;
+using Shared;
 
 namespace Cdk
 {
@@ -7,7 +8,7 @@ namespace Cdk
     {
         internal AppsyncStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
-            var api = new GraphqlApi(this, "GraphqlApi", new GraphqlApiProps
+            var api = new GraphqlApi(this, $"{Constants.AwsResourcesPrefix}GraphqlApi", new GraphqlApiProps
             {
                 Name = "appsync-api",
                 Schema = Schema.FromAsset("graphql/schema.graphql"),

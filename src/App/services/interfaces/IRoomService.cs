@@ -1,8 +1,8 @@
-﻿using App.models;
+﻿using App.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace App.services.interfaces
+namespace App.Services.Interfaces
 {
     public interface IRoomService
     {

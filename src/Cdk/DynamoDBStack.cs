@@ -1,5 +1,6 @@
 using Amazon.CDK;
 using Amazon.CDK.AWS.DynamoDB;
+using Shared;
 
 namespace Cdk
 {
@@ -9,7 +10,7 @@ namespace Cdk
 
         internal DynamoDBStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
         {
-            var table = new Table(this, "chatApp_chatTable1", new TableProps {
+            var table = new Table(this, $"{Constants.AwsResourcesPrefix}chatTable1", new TableProps {
                 TableName = Shared.Constants.MainTableName,
                 PartitionKey =  new Attribute { Name = Shared.Constants.partitionKeyField, Type = AttributeType.STRING },
                 SortKey = new Attribute { Name = Shared.Constants.sortKeyField, Type = AttributeType.STRING },

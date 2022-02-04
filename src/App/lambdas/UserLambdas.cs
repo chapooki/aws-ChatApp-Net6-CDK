@@ -4,7 +4,7 @@ using Amazon.Lambda.Serialization.SystemTextJson;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
 using App.interfaces;
-using App.services.interfaces;
+using App.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Text.Json;
@@ -12,7 +12,7 @@ using System.Text.Json;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(DefaultLambdaJsonSerializer))]
 
-namespace App.lambdas
+namespace App.Lambdas
 {
     public class UserLambdas
     {
@@ -38,7 +38,7 @@ namespace App.lambdas
             context.Logger.LogInformation("Get Request\n");
 
             string userId;
-            if (!request.QueryStringParameters!.TryGetValue("userId", out userId))
+            if (!request.PathParameters!.TryGetValue("userId", out userId))
                 throw new Exception("userId parameter was not found");
             var user = _userService.GetById(new Guid(userId));
 

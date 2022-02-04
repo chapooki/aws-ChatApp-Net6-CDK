@@ -9,7 +9,7 @@
         "PackageType": "Image",
         "ImageConfig": {
           "Command": [
-            "App::App.lambdas.UserLambdas::Get"
+            "App::App.Lambdas.UserLambdas::Get"
           ]
         },
         "ImageUri": "",
