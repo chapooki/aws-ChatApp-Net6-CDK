@@ -84,6 +84,9 @@ namespace Cdk
                     UserPassword = true,
                     UserSrp = true
                 },
+                IdTokenValidity = Duration.Days(1),
+                RefreshTokenValidity = Duration.Days(1),
+                AccessTokenValidity = Duration.Days(1),
                 PreventUserExistenceErrors = true //to return generic authentication failure responses instead of an UserNotFoundException
             });
 

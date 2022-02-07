@@ -27,14 +27,14 @@ namespace Cdk
 
             var users = api.Root.AddResource("users");
 
-            var user = users.AddResource("{userId}");
+            var user = users.AddResource("{userIds}");
 
             var userLambda = new Function(this, $"{Constants.AwsResourcesPrefix}api_getUser", new FunctionProps
             {
                 Runtime = Runtime.FROM_IMAGE,
                 Code = Code.FromAssetImage("./src/app", new AssetImageCodeProps
                 {
-                    Cmd = new string[] { "App::App.Lambdas.UserLambdas::Get" }
+                    Cmd = new string[] { "App::App.Lambdas.UserLambdas::GetList" }
                 }),
                 Handler = Handler.FROM_IMAGE,
                 Timeout = Duration.Minutes(5)
@@ -45,6 +45,56 @@ namespace Cdk
             user.AddMethod("GET", new LambdaIntegration(userLambda, 
                 new LambdaIntegrationOptions { Proxy = true }), 
                 new MethodOptions { 
+                    AuthorizationType = AuthorizationType.COGNITO,
+                    AuthorizationScopes = new string[] { "openid", "profile", "email" },
+                    Authorizer = auth
+                });
+
+
+            var rooms = api.Root.AddResource("rooms");
+
+            var room = rooms.AddResource("{roomIds}");
+
+            var getRoomLambda = new Function(this, $"{Constants.AwsResourcesPrefix}api_getRooms", new FunctionProps
+            {
+                Runtime = Runtime.FROM_IMAGE,
+                Code = Code.FromAssetImage("./src/app", new AssetImageCodeProps
+                {
+                    Cmd = new string[] { "App::App.Lambdas.RoomLambdas::GetList" }
+                }),
+                Handler = Handler.FROM_IMAGE,
+                Timeout = Duration.Minutes(5)
+            });
+            GiveAccessToChatTable(props.ChatTable, getRoomLambda);
+            GiveAccessToChatAppSSM(getRoomLambda);
+
+            room.AddMethod("GET", new LambdaIntegration(getRoomLambda,
+                new LambdaIntegrationOptions { Proxy = true }),
+                new MethodOptions
+                {
+                    AuthorizationType = AuthorizationType.COGNITO,
+                    AuthorizationScopes = new string[] { "openid", "profile", "email" },
+                    Authorizer = auth
+                });
+
+
+            var createRoomLambda = new Function(this, $"{Constants.AwsResourcesPrefix}api_createRoom", new FunctionProps
+            {
+                Runtime = Runtime.FROM_IMAGE,
+                Code = Code.FromAssetImage("./src/app", new AssetImageCodeProps
+                {
+                    Cmd = new string[] { "App::App.Lambdas.RoomLambdas::Put" }
+                }),
+                Handler = Handler.FROM_IMAGE,
+                Timeout = Duration.Minutes(5)
+            });
+            GiveAccessToChatTable(props.ChatTable, createRoomLambda);
+            GiveAccessToChatAppSSM(createRoomLambda);
+
+            rooms.AddMethod("PUT", new LambdaIntegration(createRoomLambda,
+                new LambdaIntegrationOptions { Proxy = true }),
+                new MethodOptions
+                {
                     AuthorizationType = AuthorizationType.COGNITO,
                     AuthorizationScopes = new string[] { "openid", "profile", "email" },
                     Authorizer = auth

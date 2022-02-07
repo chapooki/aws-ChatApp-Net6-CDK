@@ -3,13 +3,13 @@
   "Transform": "AWS::Serverless-2016-10-31",
   "Description": "An AWS Serverless Application.",
   "Resources": {
-    "Get": {
+    "GetUserById": {
       "Type": "AWS::Serverless::Function",
       "Properties": {
         "PackageType": "Image",
         "ImageConfig": {
           "Command": [
-            "App::App.Lambdas.UserLambdas::Get"
+            "App::App.Lambdas.UserLambdas::GetList"
           ]
         },
         "ImageUri": "",
@@ -23,7 +23,7 @@
           "RootGet": {
             "Type": "Api",
             "Properties": {
-              "Path": "/",
+              "Path": "/users/",
               "Method": "GET"
             }
           }
@@ -34,8 +34,73 @@
         "DockerContext": ".",
         "DockerTag": ""
       }
+    },
+    "GetRoomById": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "PackageType": "Image",
+        "ImageConfig": {
+          "Command": [
+            "App::App.Lambdas.RoomLambdas::GetList"
+          ]
+        },
+        "ImageUri": "",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
+        "Events": {
+          "RootGet": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/rooms/",
+              "Method": "GET"
+            }
+          }
+        }
+      },
+      "Metadata": {
+        "Dockerfile": "Dockerfile",
+        "DockerContext": ".",
+        "DockerTag": ""
+      }
+    },
+    "CreateRoom": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "PackageType": "Image",
+        "ImageConfig": {
+          "Command": [
+            "App::App.Lambdas.RoomLambdas::Put"
+          ]
+        },
+        "ImageUri": "",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
+        "Events": {
+          "RootGet": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/rooms/",
+              "Method": "Put"
+            }
+          }
+        }
+      },
+      "Metadata": {
+        "Dockerfile": "Dockerfile",
+        "DockerContext": ".",
+        "DockerTag": ""
+      }
     }
-  },
+
+},
   "Outputs": {
     "ApiURL": {
       "Description": "API endpoint URL for Prod environment",

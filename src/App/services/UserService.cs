@@ -39,5 +39,18 @@ namespace App.Services
 
             return user;
         }
+
+        public async Task<List<ChatUser>> GetByIdsList(List<Guid> userIds)
+        {
+            var list = new List<ChatUser>();
+
+            foreach (var id in userIds)
+            {
+                var user = await GetById(id);
+                list.Add(user);
+            }
+
+            return list;
+        }
     }
 }

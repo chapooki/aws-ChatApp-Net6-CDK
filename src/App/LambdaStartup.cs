@@ -20,6 +20,7 @@ namespace App
             var builder = WebApplication.CreateBuilder();
 
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IRoomService, RoomService>();
             builder.Configuration.AddSystemsManager($"/{Constants.SSMRoot}/", new AWSOptions 
             // TODO: add environment e.g. Dev or Prod after the SSMRoot if using the same aws account for staging
             {
