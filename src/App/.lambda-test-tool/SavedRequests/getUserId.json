@@ -7,7 +7,7 @@
     
   },
   "pathParameters": {
-    "userId": "4daa6950-48d5-4818-9c66-bfb057f96957"
+    "userIds": "702e0bc4-40ca-428d-b2c2-6048a2144ad3"
   },
   "stageVariables": {
     "baz": "qux"

@@ -35,7 +35,7 @@ namespace App.Services
             var userData = response.Items[0];
 
             user.Username = userData["name"].S;
-            user.RoomIds = userData["roomIds"].SS.Select(id => new Guid(id)).ToList();
+            user.RoomIds = userData["roomIds"].SS.Where(id => id != "").Select(id => new Guid(id)).ToList();
 
             return user;
         }

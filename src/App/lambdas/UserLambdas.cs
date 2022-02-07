@@ -8,6 +8,7 @@ using App.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(DefaultLambdaJsonSerializer))]
@@ -33,14 +34,14 @@ namespace App.Lambdas
         /// </summary>
         /// <param name="request"></param>
         /// <returns>The API Gateway response.</returns>
-        public APIGatewayProxyResponse Get(APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> Get(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogInformation("Get Request\n");
 
             string userId;
             if (!request.QueryStringParameters!.TryGetValue("userId", out userId))
                 throw new Exception("userId parameter was not found");
-            var user = _userService.GetById(new Guid(userId));
+            var user = await _userService.GetById(new Guid(userId));
 
             var response = new APIGatewayProxyResponse
             {
@@ -57,7 +58,7 @@ namespace App.Lambdas
         /// </summary>
         /// <param name="request"></param>
         /// <returns>The API Gateway response.</returns>
-        public APIGatewayProxyResponse GetList(APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> GetList(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogInformation("Get Request\n");
 
@@ -69,13 +70,13 @@ namespace App.Lambdas
             try
             {
                 foreach (var stringUserId in userIds.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                    guidUsersIds.Add(new Guid(stringUserId));
+                    guidUsersIds.Add(new Guid(stringUserId.Trim()));
             }
             catch (Exception ex)
             {
                 throw new Exception("Invalid parameter format", ex);
             }
-            var users = _userService.GetByIdsList(guidUsersIds);
+            var users = await _userService.GetByIdsList(guidUsersIds);
 
             var response = new APIGatewayProxyResponse
             {

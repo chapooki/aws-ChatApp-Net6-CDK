@@ -1,5 +1,5 @@
 {
-  "body": "{\"name\": \"room3\",\"userIds\": [\"4daa6950-48d5-4818-9c66-bfb057f96957\"]}",
+  "body": "{\"name\": \"room4\",\"userIds\": [\"2b05f3ec-e25b-4948-bc8c-79acc6a4a655\",\"702e0bc4-40ca-428d-b2c2-6048a2144ad3\"]}",
   "resource": "/{proxy+}",
   "path": "/path/to/resource",
   "httpMethod": "POST",

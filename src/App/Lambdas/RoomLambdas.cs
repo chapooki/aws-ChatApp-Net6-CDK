@@ -31,14 +31,14 @@ namespace App.Lambdas
         /// </summary>
         /// <param name="request"></param>
         /// <returns>The API Gateway response.</returns>
-        public APIGatewayProxyResponse Get(APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> Get(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogInformation("Get Request\n");
 
             string roomId;
             if (!request.PathParameters!.TryGetValue("roomId", out roomId))
                 throw new Exception("roomId parameter was not found");
-            var room = _roomService.GetById(new Guid(roomId));
+            var room = await _roomService.GetById(new Guid(roomId));
 
             var response = new APIGatewayProxyResponse
             {
@@ -56,7 +56,7 @@ namespace App.Lambdas
         /// </summary>
         /// <param name="request"></param>
         /// <returns>The API Gateway response.</returns>
-        public APIGatewayProxyResponse GetList(APIGatewayProxyRequest request, ILambdaContext context)
+        public async Task<APIGatewayProxyResponse> GetList(APIGatewayProxyRequest request, ILambdaContext context)
         {
             context.Logger.LogInformation("Get Request\n");
 
@@ -68,13 +68,13 @@ namespace App.Lambdas
             try
             {                
                 foreach (var stringRoomId in roomIds.Split(',', StringSplitOptions.RemoveEmptyEntries))
-                    guidRoomsIds.Add(new Guid(stringRoomId));
+                    guidRoomsIds.Add(new Guid(stringRoomId.Trim()));
             }
             catch(Exception ex)
             {
                 throw new Exception("Invalid parameter format", ex);
             }
-            var rooms = _roomService.GetByIdsList(guidRoomsIds);
+            var rooms = await _roomService.GetByIdsList(guidRoomsIds);
 
             var response = new APIGatewayProxyResponse
             {

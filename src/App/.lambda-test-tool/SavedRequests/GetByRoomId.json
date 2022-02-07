@@ -7,7 +7,7 @@
     "foo": "bar"
   },
   "pathParameters": {
-    "roomId": "85d7dc89-25f4-47ef-92db-b40681e9fad4"
+    "roomIds": "85d7dc89-25f4-47ef-92db-b40681e9fad4,aeb24b8c-eff6-4ab6-bd35-4de8e595087e"
   },
   "stageVariables": {
     "baz": "qux"

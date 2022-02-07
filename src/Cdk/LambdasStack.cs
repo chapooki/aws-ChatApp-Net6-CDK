@@ -97,7 +97,7 @@ namespace Cdk
                 {
                     AuthorizationType = AuthorizationType.COGNITO,
                     AuthorizationScopes = new string[] { "openid", "profile", "email" },
-                    Authorizer = auth
+                    Authorizer = auth,
                 });
         }
 

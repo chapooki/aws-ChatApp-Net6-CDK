@@ -38,7 +38,7 @@ namespace App.Services
 
             room.Id = new Guid(data[Shared.Constants.sortKeyField].S);
             room.Name = data["name"].S;
-            room.UserIds = data["userIds"].SS.Select(id => new Guid(id)).ToList();
+            room.UserIds = data["userIds"].SS.Where(id => id != "").Select(id => new Guid(id)).ToList();
             room.LatestMessageDateTime = DateTimeHelper.FromUnixTime(long.Parse(data["latestMessageDateTime"].N));
 
             return room;
@@ -67,7 +67,7 @@ namespace App.Services
             item.Add(Constants.sortKeyField, new AttributeValue { S = newId.ToString() });
             item.Add("name", new AttributeValue { S = room.Name });
             item.Add("userIds", new AttributeValue { SS = room.UserIds.Select(id => id.ToString() ).ToList() });
-            item.Add("latestMessageDateTime", new AttributeValue { S = DateTime.Now.ToUnixTime().ToString() });
+            item.Add("latestMessageDateTime", new AttributeValue { N = DateTime.Now.ToUnixTime().ToString() });
 
             var request = new PutItemRequest
             {
