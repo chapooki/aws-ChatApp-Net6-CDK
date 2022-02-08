@@ -52,7 +52,6 @@ namespace Cdk
 
 
             var rooms = api.Root.AddResource("rooms");
-
             var room = rooms.AddResource("{roomIds}");
 
             var getRoomLambda = new Function(this, $"{Constants.AwsResourcesPrefix}api_getRooms", new FunctionProps
@@ -92,6 +91,30 @@ namespace Cdk
             GiveAccessToChatAppSSM(createRoomLambda);
 
             rooms.AddMethod("PUT", new LambdaIntegration(createRoomLambda,
+                new LambdaIntegrationOptions { Proxy = true }),
+                new MethodOptions
+                {
+                    AuthorizationType = AuthorizationType.COGNITO,
+                    AuthorizationScopes = new string[] { "openid", "profile", "email" },
+                    Authorizer = auth,
+                });
+
+            var messages = api.Root.AddResource("messages");
+
+            var sendMessageLambda = new Function(this, $"{Constants.AwsResourcesPrefix}api_sendMessage", new FunctionProps
+            {
+                Runtime = Runtime.FROM_IMAGE,
+                Code = Code.FromAssetImage("./src/app", new AssetImageCodeProps
+                {
+                    Cmd = new string[] { "App::App.Lambdas.MessageLambdas::Put" }
+                }),
+                Handler = Handler.FROM_IMAGE,
+                Timeout = Duration.Minutes(5)
+            });
+            GiveAccessToChatTable(props.ChatTable, sendMessageLambda);
+            GiveAccessToChatAppSSM(sendMessageLambda);
+
+            messages.AddMethod("PUT", new LambdaIntegration(sendMessageLambda,
                 new LambdaIntegrationOptions { Proxy = true }),
                 new MethodOptions
                 {

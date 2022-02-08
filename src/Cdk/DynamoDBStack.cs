@@ -12,8 +12,8 @@ namespace Cdk
         {
             var table = new Table(this, $"{Constants.AwsResourcesPrefix}chatTable1", new TableProps {
                 TableName = Shared.Constants.MainTableName,
-                PartitionKey =  new Attribute { Name = Shared.Constants.partitionKeyField, Type = AttributeType.STRING },
-                SortKey = new Attribute { Name = Shared.Constants.sortKeyField, Type = AttributeType.STRING },
+                PartitionKey =  new Attribute { Name = Shared.Constants.PartitionKeyField, Type = AttributeType.STRING },
+                SortKey = new Attribute { Name = Shared.Constants.SortKeyField, Type = AttributeType.STRING },
                 BillingMode = BillingMode.PROVISIONED,
                 ReadCapacity = 1,
                 WriteCapacity = 1,
@@ -21,8 +21,8 @@ namespace Cdk
             });
 
             table.AddLocalSecondaryIndex(new LocalSecondaryIndexProps { 
-                IndexName = $"{Shared.Constants.secondaryIndexField}Index",
-                SortKey = new Attribute { Name = Shared.Constants.secondaryIndexField, Type = AttributeType.NUMBER },
+                IndexName = $"{Shared.Constants.SecondaryIndexField}Index",
+                SortKey = new Attribute { Name = Shared.Constants.SecondaryIndexField, Type = AttributeType.NUMBER },
                 ProjectionType = ProjectionType.ALL
             });
 

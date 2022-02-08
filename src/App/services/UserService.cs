@@ -3,6 +3,7 @@ using Amazon.DynamoDBv2.Model;
 using App.Helpers;
 using App.Models;
 using App.Services.Interfaces;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace App.Services
             var request = new QueryRequest
             {
                 TableName = Shared.Constants.MainTableName,
-                KeyConditionExpression = $"{Shared.Constants.partitionKeyField} = :v_table and {Shared.Constants.sortKeyField} = :v_userId",
+                KeyConditionExpression = $"{Shared.Constants.PartitionKeyField} = :v_table and {Shared.Constants.SortKeyField} = :v_userId",
                 ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
                     {":v_table", new AttributeValue { S =  Shared.Constants.UsersTableName }},
                     {":v_userId", new AttributeValue { S =  userId.ToString() }}}
@@ -51,6 +52,31 @@ namespace App.Services
             }
 
             return list;
+        }
+
+        public async Task AddToRoom(Guid userId, Guid roomId)
+        {
+            var client = new AmazonDynamoDBClient();
+
+            var key = new Dictionary<string, AttributeValue>();
+            key.Add(Constants.PartitionKeyField, new AttributeValue { S = Constants.UsersTableName });
+            key.Add(Constants.SortKeyField, new AttributeValue { S = userId.ToString() });
+
+            var attributeUpdates = new Dictionary<string, AttributeValueUpdate>();
+            attributeUpdates.Add("roomIds", new AttributeValueUpdate
+            {
+                Action = AttributeAction.ADD,
+                Value = new AttributeValue { SS = new List<String>{ roomId.ToString() } }
+            });
+
+            var request = new UpdateItemRequest
+            {
+                TableName = Shared.Constants.MainTableName,
+                Key = key,
+                AttributeUpdates = attributeUpdates
+            };
+
+            await client.UpdateItemAsync(request);
         }
     }
 }

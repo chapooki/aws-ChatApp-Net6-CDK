@@ -19,11 +19,11 @@ namespace Shared
         public static readonly string MainTableName = "chatTable";
         public static readonly string UsersTableName = "users";
         public static readonly string RoomsTableName = "rooms";
-        public static readonly string messagesTableName = "messages";
+        public static readonly string MessagesTableName = "messages";
         
-        public static readonly string partitionKeyField = "partitionKey";
-        public static readonly string sortKeyField = "sortKey";
-        public static readonly string secondaryIndexField = "secondaryIndex";
+        public static readonly string PartitionKeyField = "partitionKey";
+        public static readonly string SortKeyField = "sortKey";
+        public static readonly string SecondaryIndexField = "secondaryIndex";
 
     }
 }

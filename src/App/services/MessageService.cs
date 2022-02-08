@@ -1,6 +1,9 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
+using App.Helpers;
 using App.Models;
+using App.Services.Interfaces;
+using Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,32 +12,43 @@ using System.Threading.Tasks;
 
 namespace App.Services
 {
-    internal class MessageService
+    internal class MessageService: IMessageService
     {
-        //public async List<ChatMessage> GetMessages(string sender, string receiver, 
-        //    DateTime? fromDateTime, bool onlyUnreadMessages)
-        //{
-        //    List<ChatMessage> messages = null;
+        private readonly IRoomService _roomService;
 
-        //    AmazonDynamoDBClient client = new AmazonDynamoDBClient();
+        public MessageService(IRoomService roomService)
+        {
+            _roomService = roomService;
+        }
 
-        //    var request = new QueryRequest
-        //    {
-        //        TableName = Shared.Constants.MessageTableName,
-        //        KeyConditionExpression = "Id = :v_Id",
-        //        ExpressionAttributeValues = new Dictionary<string, AttributeValue> {
-        //{":v_Id", new AttributeValue { S =  "Amazon DynamoDB#DynamoDB Thread 1" }}}
-        //    };
+        public async Task<Guid> SendMessage(ChatMessage message)
+        {
+            if (message == null || string.IsNullOrWhiteSpace(message.Content))
+                return default;
 
-        //    var response = client.Query(request);
+            var client = new AmazonDynamoDBClient();
 
-        //    foreach (Dictionary<string, AttributeValue> item in response.Items)
-        //    {
-        //        // Process the result.
-        //        PrintItem(item);
-        //    }
+            if (message.Id == new Guid())
+                message.Id = Guid.NewGuid();
 
-        //    return messages;
-        //}
+            var item = new Dictionary<string, AttributeValue>();
+            item.Add(Constants.PartitionKeyField, new AttributeValue { S = $"{Constants.MessagesTableName}#{message.RoomId}" });
+            item.Add(Constants.SortKeyField, new AttributeValue { S = message.Id.ToString() });
+            item.Add(Constants.SecondaryIndexField, new AttributeValue { N = message.SendDateTime.ToUnixTime().ToString() });
+            item.Add("sender", new AttributeValue { S = message.SenderUserId.ToString() });
+            item.Add("content", new AttributeValue { S = message.Content });
+
+            var request = new PutItemRequest
+            {
+                TableName = Shared.Constants.MainTableName,
+                Item = item
+            };
+
+            var response = await client.PutItemAsync(request);
+
+            await _roomService.ReceiveANewMessage(message);
+
+            return message.Id;
+        }
     }
 }

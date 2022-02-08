@@ -1,5 +1,5 @@
 {
-  "body": "{\"test\":\"body\"}",
+  "body": "{\"roomId\": \"476909de-9d63-4c2b-bf40-7e486a3673ba\",\"content\": \"hello\"}",
   "resource": "/{proxy+}",
   "path": "/path/to/resource",
   "httpMethod": "POST",
@@ -7,12 +7,13 @@
     "foo": "bar"
   },
   "pathParameters": {
-    "roomId": "85d7dc89-25f4-47ef-92db-b40681e9fad4"
+    "proxy": "path/to/resource"
   },
   "stageVariables": {
     "baz": "qux"
   },
   "headers": {
+   "Authorization": "Bearer eyJraWQiOiJ4Wnc5VlI1XC9nMVZLMUNzQzkrSkszXC8xRXBRSDBXVG1zZ3hPYXJDQ0d5NkU9IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiIyYjA1ZjNlYy1lMjViLTQ5NDgtYmM4Yy03OWFjYzZhNGE2NTUiLCJldmVudF9pZCI6IjY2NWIyMDJmLWE4NGMtNDM3ZC04YzNhLWI4ZjY0Mjc4OGU1ZCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4gcGhvbmUgb3BlbmlkIHByb2ZpbGUgZW1haWwiLCJhdXRoX3RpbWUiOjE2NDQyNzIzMjksImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5hcC1zb3V0aGVhc3QtMi5hbWF6b25hd3MuY29tXC9hcC1zb3V0aGVhc3QtMl9HT0xmdXI0WXkiLCJleHAiOjE2NDQzNTg3MjksImlhdCI6MTY0NDI3MjMyOSwidmVyc2lvbiI6MiwianRpIjoiMzEyZTQ1ZTQtOTFjYy00MGIwLTgxN2MtZDU3OTAyMmYzZTM2IiwiY2xpZW50X2lkIjoiNXU1OHQ0cnAybjBkcGdudGszdGRva2dqMXEiLCJ1c2VybmFtZSI6InVzZXIxIn0.fzc1uNC_kc9qtMRYitElt63foKDbfF1tfcldTnjvA2Y4pv6_buXrTjUnXs5gIBDAf32r13Yw6tt7pFTUdklk1YZ9YymAKynX1s-K-JsRJJMDpsrfeNee37-zUsEj1Tmwx81EMPkvyCI9qcIxp4YvZdF6mQcVDNsKFsWwwTkF23tCBtL16F_Qipt_rKyUtCKeQB42Y_5p1R4NIJNJt4p0o3rvTGa-BfZhm0n1uwsSpvp3rBKVfOj6bF7HZmGeIXgBDRavRGhPS83vSNs8BdmyXXCjeGVY6AoKtlSZcv8PYoywXmYlOyqzBS7ixzsgzxFLX_B4BWZwPQMm1KhvpLW9Aw",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
     "Accept-Encoding": "gzip, deflate, sdch",
     "Accept-Language": "en-US,en;q=0.8",

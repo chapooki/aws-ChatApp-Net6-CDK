@@ -98,7 +98,40 @@
         "DockerContext": ".",
         "DockerTag": ""
       }
+    },
+    "SendMessage": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "PackageType": "Image",
+        "ImageConfig": {
+          "Command": [
+            "App::App.Lambdas.MessageLambdas::Put"
+          ]
+        },
+        "ImageUri": "",
+        "MemorySize": 256,
+        "Timeout": 30,
+        "Role": null,
+        "Policies": [
+          "AWSLambdaBasicExecutionRole"
+        ],
+        "Events": {
+          "RootGet": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/messages/",
+              "Method": "Put"
+            }
+          }
+        }
+      },
+      "Metadata": {
+        "Dockerfile": "Dockerfile",
+        "DockerContext": ".",
+        "DockerTag": ""
+      }
     }
+
 
 },
   "Outputs": {

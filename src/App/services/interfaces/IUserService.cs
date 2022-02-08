@@ -9,5 +9,6 @@ namespace App.Services.Interfaces
     {
         Task<ChatUser> GetById(Guid userId);
         Task<List<ChatUser>> GetByIdsList(List<Guid> userIds);
+        Task AddToRoom(Guid userId, Guid roomId);
     }
 }

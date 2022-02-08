@@ -8,10 +8,10 @@ namespace App.Models
 {
     public class ChatMessage
     {
-       public string Sender { get; set; }
-       public string Receiver { get; set; }
+       public Guid Id { get; set; }
+       public Guid SenderUserId { get; set; }
+       public Guid RoomId { get; set; }
        public DateTime SendDateTime { get; set; }
-       public DateTime? ReceivedDateTime { get; set; }
        public string Content { get; set; }
     }
 }
