@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using App.Helpers;
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(DefaultLambdaJsonSerializer))]
@@ -60,7 +61,7 @@ namespace App.Lambdas
         /// <returns>The API Gateway response.</returns>
         public async Task<APIGatewayProxyResponse> GetList(APIGatewayProxyRequest request, ILambdaContext context)
         {
-            context.Logger.LogInformation("Get Request\n");
+            context.Logger.LogInformation($"Get Request\n.");
 
             string userIds;
             if (!request.PathParameters!.TryGetValue("userIds", out userIds))

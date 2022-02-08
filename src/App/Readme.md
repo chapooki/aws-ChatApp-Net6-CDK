@@ -108,8 +108,8 @@ Step3 - Pass the access token in API call Header as bearer token
 
 Step4 - 
 use https://jwt.io/ to read the content of the JWT. 
-    - if you use ID token: The "Sub" field is userId and "cognito:username" is username
-    - if you use access token: The "Sub" field is userId and "username"is username
+    - if you use ID token: The "sub" field is userId and "cognito:username" is username
+    - if you use access token: The "sub" field is userId and "username"is username
 
 
 -----------------------------------------------------

@@ -9,6 +9,7 @@ using App.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System.Threading.Tasks;
+using App.Helpers;
 
 namespace App.Lambdas
 {
@@ -91,6 +92,7 @@ namespace App.Lambdas
         {
             NewChatRoom room = null;
             context.Logger.LogInformation("Put Request\n");
+            var token = new JWTHelper().GetTokenData(request);
 
             try
             {
@@ -101,6 +103,9 @@ namespace App.Lambdas
             {
                 throw new Exception("Error in parsing the request body", ex);
             }
+
+            if (!room.UserIds.Contains(token.UserId))
+                room.UserIds.Add(token.UserId);
 
             var roomId = await _roomService.Create(room);
 
