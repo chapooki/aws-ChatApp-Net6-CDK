@@ -39,8 +39,8 @@ namespace Cdk
                 Handler = Handler.FROM_IMAGE,
                 Timeout = Duration.Minutes(5)
             });
-            GiveAccessToChatTable(props.ChatTable, userLambda);
-            GiveAccessToChatAppSSM(userLambda);
+            PermissionHelper.GiveAccessToChatTable(props.ChatTable, userLambda);
+            PermissionHelper.GiveAccessToChatAppSSM(userLambda);
 
             user.AddMethod("GET", new LambdaIntegration(userLambda, 
                 new LambdaIntegrationOptions { Proxy = true }), 
@@ -64,8 +64,8 @@ namespace Cdk
                 Handler = Handler.FROM_IMAGE,
                 Timeout = Duration.Minutes(5)
             });
-            GiveAccessToChatTable(props.ChatTable, getRoomLambda);
-            GiveAccessToChatAppSSM(getRoomLambda);
+            PermissionHelper.GiveAccessToChatTable(props.ChatTable, getRoomLambda);
+            PermissionHelper.GiveAccessToChatAppSSM(getRoomLambda);
 
             room.AddMethod("GET", new LambdaIntegration(getRoomLambda,
                 new LambdaIntegrationOptions { Proxy = true }),
@@ -87,8 +87,8 @@ namespace Cdk
                 Handler = Handler.FROM_IMAGE,
                 Timeout = Duration.Minutes(5)
             });
-            GiveAccessToChatTable(props.ChatTable, createRoomLambda);
-            GiveAccessToChatAppSSM(createRoomLambda);
+            PermissionHelper.GiveAccessToChatTable(props.ChatTable, createRoomLambda);
+            PermissionHelper.GiveAccessToChatAppSSM(createRoomLambda);
 
             rooms.AddMethod("PUT", new LambdaIntegration(createRoomLambda,
                 new LambdaIntegrationOptions { Proxy = true }),
@@ -111,8 +111,8 @@ namespace Cdk
                 Handler = Handler.FROM_IMAGE,
                 Timeout = Duration.Minutes(5)
             });
-            GiveAccessToChatTable(props.ChatTable, sendMessageLambda);
-            GiveAccessToChatAppSSM(sendMessageLambda);
+            PermissionHelper.GiveAccessToChatTable(props.ChatTable, sendMessageLambda);
+            PermissionHelper.GiveAccessToChatAppSSM(sendMessageLambda);
 
             messages.AddMethod("PUT", new LambdaIntegration(sendMessageLambda,
                 new LambdaIntegrationOptions { Proxy = true }),
@@ -122,23 +122,6 @@ namespace Cdk
                     AuthorizationScopes = new string[] { "openid", "profile", "email" },
                     Authorizer = auth,
                 });
-        }
-
-        private void GiveAccessToChatTable(Table chatTable, Function lambda)
-        {
-            chatTable.GrantReadWriteData(lambda);
-        }
-
-        private void GiveAccessToChatAppSSM(Function lambda)
-        {
-            lambda.AddToRolePolicy(
-              new PolicyStatement(new PolicyStatementProps
-              {
-                  Effect = Effect.ALLOW,
-                  Actions = new string[] { "ssm:GetParameter", "ssm:GetParameters", "ssm:GetParametersByPath" },
-                  Resources = new string[] { "*" /* $"arn:aws:ssm:{Constants.Region}:*:parameter/{Constants.SSMRoot}/*" */ }  // NOTE: It didn't work until I set it to *            
-              })
-            );
         }
     }
 }

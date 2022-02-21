@@ -1,5 +1,8 @@
 ﻿using Amazon.CDK;
 using Amazon.CDK.AWS.Cognito;
+using Amazon.CDK.AWS.DynamoDB;
+using Amazon.CDK.AWS.IAM;
+using Amazon.CDK.AWS.Lambda;
 using Amazon.CDK.AWS.SSM;
 using Shared;
 using System.Collections.Generic;
@@ -8,10 +11,29 @@ namespace Cdk
 {
     public class CognitoStack : Stack
     {
+        public class CognitoStackProps : StackProps
+        {
+            public Table ChatTable { get; set; }
+
+        }
+
         public UserPool UserPool { get; private set; }
 
-        internal CognitoStack(Construct scope, string id, IStackProps props = null) : base(scope, id, props)
+        internal CognitoStack(Construct scope, string id, CognitoStackProps props = null) : base(scope, id, props)
         {
+            var postSignUpFunction = new Function(this, $"{Constants.AwsResourcesPrefix}userPoolTrigger_registerUser", new FunctionProps
+            {
+                Runtime = Runtime.FROM_IMAGE,
+                Code = Code.FromAssetImage("./src/app", new AssetImageCodeProps
+                {
+                    Cmd = new string[] { "App::App.Lambdas.UserLambdas::RegisterUser" }
+                }),
+                Handler = Handler.FROM_IMAGE,
+                Timeout = Duration.Minutes(5)
+            });
+            PermissionHelper.GiveAccessToChatTable(props.ChatTable, postSignUpFunction);
+            PermissionHelper.GiveAccessToChatAppSSM(postSignUpFunction);
+
             var userPool = new UserPool(this, $"{Constants.AwsResourcesPrefix}UserPool", new UserPoolProps
             {
                 UserPoolName = $"{Constants.AwsResourcesPrefix}UserPool",
@@ -67,8 +89,12 @@ namespace Cdk
                 //    FromName = "Awesome App",
                 //    ReplyTo = "support@myawesomeapp.com"
                 //})
+                LambdaTriggers = new UserPoolTriggers
+                {
+                    PostConfirmation = postSignUpFunction
+                }
             });
-
+            
             userPool.AddDomain($"{Constants.AwsResourcesPrefix}userPoolDomain", new UserPoolDomainOptions
             {
                 CognitoDomain = new CognitoDomainOptions
@@ -87,7 +113,7 @@ namespace Cdk
                 IdTokenValidity = Duration.Days(1),
                 RefreshTokenValidity = Duration.Days(1),
                 AccessTokenValidity = Duration.Days(1),
-                PreventUserExistenceErrors = true //to return generic authentication failure responses instead of an UserNotFoundException
+                PreventUserExistenceErrors = true, //to return generic authentication failure responses instead of an UserNotFoundException
             });
 
             new CfnOutput(this, "chatApp_userpoolId", new CfnOutputProps { Value = userPool.UserPoolId });

@@ -7,6 +7,7 @@ namespace App.Services.Interfaces
 {
     public interface IUserService
     {
+        Task RegisterUser(NewChatUser user);
         Task<ChatUser> GetById(Guid userId);
         Task<List<ChatUser>> GetByIdsList(List<Guid> userIds);
         Task AddToRoom(Guid userId, Guid roomId);

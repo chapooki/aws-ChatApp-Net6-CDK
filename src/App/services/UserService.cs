@@ -14,6 +14,26 @@ namespace App.Services
 {
     public class UserService : IUserService
     {
+        public async Task RegisterUser(NewChatUser user)
+        {
+            var client = new AmazonDynamoDBClient();
+
+            var item = new Dictionary<string, AttributeValue>();
+            item.Add(Constants.PartitionKeyField, new AttributeValue { S = Constants.UsersTableName });
+            item.Add(Constants.SortKeyField, new AttributeValue { S = user.Id.ToString() });
+            item.Add("name", new AttributeValue { S = user.Username });
+
+            var request = new PutItemRequest
+            {
+                TableName = Shared.Constants.MainTableName,
+                Item = item
+            };
+
+            // TODO replace this with client.TransactWriteItems to support transactionScope
+
+            var response = await client.PutItemAsync(request);
+        }
+
         public async Task<ChatUser> GetById(Guid userId)
         {
             ChatUser user = new ChatUser { Id = userId };

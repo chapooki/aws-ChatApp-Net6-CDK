@@ -1,4 +1,5 @@
 ﻿using Amazon.CDK;
+using static Cdk.CognitoStack;
 using static Cdk.LambdasStack;
 
 namespace Cdk
@@ -15,14 +16,15 @@ namespace Cdk
                 Region = "ap-southeast-2",
             };
 
-            var cognitoStack = new CognitoStack(app, "ChatAppCognitoStack", new StackProps
+            var dynamoDBStack = new DynamoDBStack(app, "ChatAppDynamoDBStack", new StackProps
             {
                 Env = env
             });
 
-            var dynamoDBStack = new DynamoDBStack(app, "ChatAppDynamoDBStack", new StackProps
+            var cognitoStack = new CognitoStack(app, "ChatAppCognitoStack", new CognitoStackProps
             {
-                Env = env
+                Env = env,
+                ChatTable = dynamoDBStack.ChatTable,
             });
 
             var lambdasStack = new LambdasStack(app, "ChatAppLambdasStack", new LambdasStackProps

@@ -3,15 +3,13 @@ using System.Net;
 using Amazon.Lambda.Serialization.SystemTextJson;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.APIGatewayEvents;
-using App.interfaces;
 using App.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
-using App.Helpers;
+using App.Models.CognitoLambdaTriggers;
 
-// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(DefaultLambdaJsonSerializer))]
 
 namespace App.Lambdas
@@ -87,6 +85,28 @@ namespace App.Lambdas
             };
 
             return response;
+        }
+
+
+        public async Task<PostConfirmationRequest> RegisterUser(PostConfirmationRequest request, ILambdaContext context)
+        {
+            context.Logger.LogInformation($"RegisterUser Request. {JsonConvert.SerializeObject(request)}");
+
+            try
+            {
+                await _userService.RegisterUser(new Models.NewChatUser
+                {
+                    Id = new Guid(request.request.userAttributes["sub"]),
+                    Username = request.userName
+                });
+            }
+            catch (Exception)
+            {
+                context.Logger.LogError("error in getting user data");
+                throw;
+            }
+
+            return request;
         }
     }
 }
